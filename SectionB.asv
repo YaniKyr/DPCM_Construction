@@ -44,10 +44,10 @@ x_tide = zeros(size(signal));
 
 for n = 1: length(signal)
     if n>1
-        x_hat(n) = y_hat_not(n) +  x_tide(n-1);
+        x_hat(n) = y_hat(n) +  x_tide(n);
         x_tide(n) = get_pred(x_hat,n,p);
     else
-        x_hat(n) = y_hat_not(n);
+        x_hat(n) = y_hat(n);
         
     end
 end
