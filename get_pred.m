@@ -1,12 +1,14 @@
-function y_tide = get_pred(sig,a)
-    y_tide = zeros(1,length(sig));
+function y_tide = get_pred(sig,a,p)
+
+    y_tide = zeros(size(sig));
+
     for n =1:length(sig)
         if n>p
             for i =1:p
-                y_tide = y_tide + a(i)* sig(n-i);
+                y_tide(n) = y_tide(n) + (a(i)* sig(n-i));
             end
         else
-            y_tide = signal(n);
+            y_tide(n) = 0;
     
         end
     end
