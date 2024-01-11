@@ -9,9 +9,9 @@ min_val = -3.5;
 N=16;
 memory= zeros(size(signal));
 y_hat = zeros(size(signal));
-y = zeros(size(signal));
 y_tide = 0;
 centers = get_centers(N,max_val,min_val);
+
 
 for n = 1: length(signal)
     if mod(n,1000)==0
@@ -34,7 +34,7 @@ for n = 1: length(signal)
     
 end
 
-
+%@@@@@@@decoding
 x_hat = zeros(size(signal));
 x_tide = zeros(size(signal));
 
