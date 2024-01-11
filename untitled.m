@@ -31,6 +31,9 @@ h = entropy/avglength;
 
 keys = [];
 values = [];
+
+
+%@@@@@@@@@@@ FIX THIS @@@@@@@@@@@@@@@@@@@@
 for i = 1:length(unique_pixel_values)
     for j = 1:length(unique_pixel_values)
         newString = strcat(int2str(unique_pixel_values(i)), int2str(unique_pixel_values(j)));
@@ -54,6 +57,16 @@ isequal(img_vector,deco)
 bI = reshape((dec2bin(typecast(img_vector,'uint8'),4)-'0').',1,[]);
 J = length(enco)/length(bI);
 
+
+figure;
+imshow(img);
+title('Orginal Image')
+
+DecodedImage = uint8(reshape(deco, [200, 150]));
+figure;
+imshow(DecodedImage);
+title('Decoded Image')
+
 %5
 y = binary_symmetric_channel(enco);
 
@@ -65,3 +78,6 @@ counts = data(:, 3);
 p = counts{2} /100;
 
 ChannelSpan = 1-(-p*log2(p)-(1-p)*log2(1-p));
+
+
+%mutual information
