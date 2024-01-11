@@ -12,6 +12,9 @@ y_hat_not = zeros(size(signal));
 y_hat = zeros(size(signal));
 y = zeros(size(signal));
 y_tide = zeros(size(signal));
+
+%@@@@@@@ encoding
+
 for n = 1: length(signal)
         disp(n)
      if n>1
@@ -38,7 +41,7 @@ for n = 1: length(signal)
     
 end
 
-
+%@@@@@@@decoding
 x_hat = zeros(size(signal));
 x_tide = zeros(size(signal));
 
