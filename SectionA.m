@@ -1,73 +1,83 @@
-load source.mat 
+img = imread("parrot.png"); 
+% Read an image
 
-signal = t;
-p=10;
+% Convert the image to a column vector
+img_vector = img(:);
 
-max_val =3.5;
-min_val = -3.5;
+tabulated_data = tabulate(img_vector);
 
-N=16;
-memory= zeros(size(signal));
-y_hat = zeros(size(signal));
-y_tide = 0;
-centers = get_centers(N,max_val,min_val);
+% tabulated data returns counts and propability (%)
+unique_pixel_values = tabulated_data(:, 1);
+pixel_counts = tabulated_data(:, 2);
+pixel_probabilities = pixel_counts / sum(pixel_counts);
+
+%figure;
+%bar(unique_pixel_values, pixel_probabilities);
+%title('Pixel Value Probability Distribution');
+%xlabel('Pixel Value');
+%ylabel('Probability');
+
+%huffenco
+dict = huffmandict(unique_pixel_values,pixel_probabilities);
 
 
-for n = 1: length(signal)
-    if mod(n,1000)==0
-        disp("Encoded Round:")
-        disp(n)
-    end
-    
-     if n>1
-         
-        y(n) = signal(n) - y_tide;
-        y_hat(n) = my_quantizer(y(n),max_val,min_val,centers);
-        memory(n) = y_hat(n) +  y_tide;
-        y_tide = get_pred(memory,n,p);
-     else
-         y(n) = signal(n);
-         y_hat(n) = my_quantizer(y(n),max_val,min_val,centers);
-         memory(n) = y_hat(n);
-        y_tide = get_pred(memory,n,p);
-     end
-    
-end
+entropy= -sum(pixel_probabilities.*log2(pixel_probabilities));
 
-%@@@@@@@decoding
-x_hat = zeros(size(signal));
-x_tide = zeros(size(signal));
+avglength = sum(cellfun(@length, dict(:,2)) .* pixel_probabilities);
 
-for n = 1: length(signal)
-    if mod(n,1000)==0
-        disp("Decoded Round:")
-        disp(n)
-    end
-    if n>1
-        x_hat(n) = y_hat(n) +  x_tide(n-1);
-        x_tide(n) = get_pred(x_hat,n,p);
-    else
-        x_hat(n) = y_hat(n);
-        
+h = entropy/avglength;
+
+
+
+keys = [];
+values = [];
+
+
+%@@@@@@@@@@@ FIX THIS @@@@@@@@@@@@@@@@@@@@
+for i = 1:length(unique_pixel_values)
+    for j = 1:length(unique_pixel_values)
+        newString = strcat(int2str(unique_pixel_values(i)), int2str(unique_pixel_values(j)));
+        keys = [keys, {newString}];
+        values = [values pixel_probabilities(i)* pixel_probabilities(j)];
     end
 end
-x= 1:length(signal);
-plot(x,signal,x,x_hat,Marker=".")
+
+tdict = huffmandict(keys,values);
+tentropy= -sum(values.*log2(values));
+
+tavglength = sum(cellfun(@length, tdict(:,2))' .* values);
+
+th = tentropy/tavglength;
+
+%q 4
+enco = huffmanenco(img_vector,dict);
+deco = huffmandeco(enco,dict);
+isequal(img_vector,deco)
+
+bI = reshape((dec2bin(typecast(img_vector,'uint8'),4)-'0').',1,[]);
+J = length(enco)/length(bI);
 
 
 figure;
+imshow(img);
+title('Orginal Image')
 
-% Original Signal
-subplot(3, 1, 1);
-plot(signal,Marker='.');
-title('Original Signal');
+DecodedImage = uint8(reshape(deco, [200, 150]));
+figure;
+imshow(DecodedImage);
+title('Decoded Image')
 
-% Encoded-Original Difference
-subplot(4, 1, 2);
-plot(x,signal,x,y_hat,Marker='.');
-title('Encoded - Original');
+%5
+y = binary_symmetric_channel(enco);
 
-% Decoded Signal
-subplot(4, 1, 3);
-plot(x,signal,x,x_hat,Marker='.');
-title('Decoded-Original Signal');
+vec = y==enco;
+
+data = tabulate(vec);
+
+counts = data(:, 3);
+p = counts{2} /100;
+
+ChannelSpan = 1-(-p*log2(p)-(1-p)*log2(1-p));
+
+
+%mutual information
