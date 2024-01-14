@@ -1,12 +1,10 @@
-function y_t = my_quantizer(y,N,max_val,min_val)
+function y_t = my_quantizer(y,max_val,min_val,centers)
     y = min(max(y,min_val),max_val);
 
-    cc = get_centers(N,max_val,min_val);
-    
-    [~, index] = min(abs(cc - y));
+    [~, index] = min(abs(centers - y));
 
     % Set y_t to the corresponding center value
-    
-    y_t = cc(index);
+   
+    y_t = centers(index);
    
 end
