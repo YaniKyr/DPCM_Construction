@@ -1,17 +1,17 @@
 load source.mat 
 
 signal = t;
-p=10;
+p=8;
 
 max_val =3.5;
 min_val = -3.5;
+a = get_correlation(signal,p);
 
-N=16;
-memory= zeros(size(signal));
+N=3;
+memory = zeros(size(signal));
 y_hat = zeros(size(signal));
 y_tide = 0;
-centers = get_centers(N,max_val,min_val);
-
+centers = GetCenters(N,min_val,max_val);
 
 for n = 1: length(signal)
     if mod(n,1000)==0
@@ -19,37 +19,31 @@ for n = 1: length(signal)
         disp(n)
     end
     
-     if n>1
+   
          
         y(n) = signal(n) - y_tide;
-        y_hat(n) = my_quantizer(y(n),max_val,min_val,centers);
+        y_hat(n) = my_quantizer1(y(n),N,min_val,max_val,centers);
         memory(n) = y_hat(n) +  y_tide;
-        y_tide = get_pred(memory,n,p);
-     else
-         y(n) = signal(n);
-         y_hat(n) = my_quantizer(y(n),max_val,min_val,centers);
-         memory(n) = y_hat(n);
-        y_tide = get_pred(memory,n,p);
-     end
-    
+        
+        y_tide = get_pred(memory,n,p,a);
 end
 
 %@@@@@@@decoding
+memory = zeros(size(signal));
 x_hat = zeros(size(signal));
-x_tide = zeros(size(signal));
+x_tide = 0;
 
 for n = 1: length(signal)
     if mod(n,1000)==0
         disp("Decoded Round:")
         disp(n)
     end
-    if n>1
-        x_hat(n) = y_hat(n) +  x_tide(n-1);
-        x_tide(n) = get_pred(x_hat,n,p);
-    else
-        x_hat(n) = y_hat(n);
         
-    end
+       x_hat(n) = y_hat(n)+  x_tide;
+        x_tide = get_pred(x_hat,n,p,a);
+        
+       
+
 end
 x= 1:length(signal);
 plot(x,signal,x,x_hat,Marker=".")

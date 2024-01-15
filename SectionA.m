@@ -34,14 +34,14 @@ values = [];
 
 
 %@@@@@@@@@@@ FIX THIS @@@@@@@@@@@@@@@@@@@@
-for i = 1:length(unique_pixel_values)
-    for j = 1:length(unique_pixel_values)
-        newString = strcat(int2str(unique_pixel_values(i)), int2str(unique_pixel_values(j)));
+for i = 1:length(unique_pixel_values)-1
+   
+        newString = strcat(int2str(unique_pixel_values(i)), int2str(unique_pixel_values(i+1)));
         keys = [keys, {newString}];
-        values = [values pixel_probabilities(i)* pixel_probabilities(j)];
-    end
+        values = [values pixel_probabilities(i)* pixel_probabilities(i+1)];
+    
 end
-
+disp(sum(values))
 tdict = huffmandict(keys,values);
 tentropy= -sum(values.*log2(values));
 
