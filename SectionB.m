@@ -11,7 +11,7 @@ N=3;
 memory = zeros(size(signal));
 y_hat = zeros(size(signal));
 y_tide = 0;
-centers = GetCenters(N,min_val,max_val);
+centers = get_centers(N,min_val,max_val);
 
 for n = 1: length(signal)
     if mod(n,1000)==0
@@ -22,7 +22,7 @@ for n = 1: length(signal)
    
          
         y(n) = signal(n) - y_tide;
-        y_hat(n) = my_quantizer1(y(n),N,min_val,max_val,centers);
+        y_hat(n) = my_quantizer(y(n),max_val,min_val,centers);
         memory(n) = y_hat(n) +  y_tide;
         
         y_tide = get_pred(memory,n,p,a);
@@ -40,10 +40,9 @@ for n = 1: length(signal)
     end
         
        x_hat(n) = y_hat(n)+  x_tide;
-        x_tide = get_pred(x_hat,n,p,a);
+       x_tide = get_pred(x_hat,n,p,a);
         
-       
-
+      
 end
 x= 1:length(signal);
 plot(x,signal,x,x_hat,Marker=".")

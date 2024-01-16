@@ -34,9 +34,9 @@ values = [];
 
 
 %@@@@@@@@@@@ FIX THIS @@@@@@@@@@@@@@@@@@@@
-for i = 1:length(unique_pixel_values)-1
+for i = 1:length(img_vector)-1
    
-        newString = strcat(int2str(unique_pixel_values(i)), int2str(unique_pixel_values(i+1)));
+        newString = strcat(int2str(img_vector(i)), int2str(img_vector(i+1)));
         keys = [keys, {newString}];
         values = [values pixel_probabilities(i)* pixel_probabilities(i+1)];
     
