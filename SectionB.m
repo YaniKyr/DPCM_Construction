@@ -13,39 +13,44 @@ y_hat = zeros(size(signal));
 y_tide = 0;
 centers = get_centers(N,min_val,max_val);
 
+%@@@@@@@@@@@@@@@@@@@@@@@@
+%@@@@@@@ encoding @@@@@@@
+%@@@@@@@@@@@@@@@@@@@@@@@@
+
 for n = 1: length(signal)
-    if mod(n,1000)==0
-        disp("Encoded Round:")
-        disp(n)
-    end
-    
-   
-         
-        y(n) = signal(n) - y_tide;
-        y_hat(n) = my_quantizer(y(n),max_val,min_val,centers);
+
+        y = signal(n) - y_tide;
+        y_hat(n) = my_quantizer(y,max_val,min_val,centers);
         memory(n) = y_hat(n) +  y_tide;
         
         y_tide = get_pred(memory,n,p,a);
 end
 
-%@@@@@@@decoding
+
+%@@@@@@@@@@@@@@@@@@@@@@@@
+%@@@@@@@ decoding @@@@@@@
+%@@@@@@@@@@@@@@@@@@@@@@@@
+
+
 memory = zeros(size(signal));
 x_hat = zeros(size(signal));
 x_tide = 0;
 
 for n = 1: length(signal)
-    if mod(n,1000)==0
-        disp("Decoded Round:")
-        disp(n)
-    end
-        
        x_hat(n) = y_hat(n)+  x_tide;
-       x_tide = get_pred(x_hat,n,p,a);
-        
-      
+       x_tide = get_pred(x_hat,n,p,a);  
 end
+
+
+
+%@@@@@@@@@@@@@@@@@@@@@
+%@@@@@@@ plots @@@@@@@
+%@@@@@@@@@@@@@@@@@@@@@
+
 x= 1:length(signal);
 plot(x,signal,x,x_hat,Marker=".")
+
+
 
 
 figure;
