@@ -7,12 +7,9 @@ signals = [];
 count =1;
 x = 1:length(sig);
 sig1 = sig(1:5000);
-sig2 = sig(5001:10000);
-sig3 = sig(10001:15000);
-sig4 = sig(15001:20000);
-calculatron
-function calculatron(sigs)
-for n = sigs
+sig1 = sig(5001:10000);
+sig1 = sig(10001:15000);
+sig1 = sig(1:5000);
 for i = N
    for j = p
         [~,~,y_hat]=   DPCM(sig,j,i);
@@ -26,8 +23,6 @@ for i = N
         count = count+1;
         
     end
-end
-end
 end
 %{
 hold on

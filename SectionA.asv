@@ -71,7 +71,7 @@ disp(tentropy)
 disp('Code Length =')
 disp(tavglength)
 disp('H =')
-disp(th)
+disp(h)
 
 
 %q 4
