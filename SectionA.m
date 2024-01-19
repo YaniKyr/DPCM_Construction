@@ -6,7 +6,6 @@ img_vector = img(:);
 
 tabulated_data = tabulate(img_vector);
 
-% tabulated data returns counts and propability (%)
 unique_pixel_values = tabulated_data(:, 1);
 pixel_counts = tabulated_data(:, 2);
 pixel_probabilities = pixel_counts / sum(pixel_counts);
@@ -28,6 +27,7 @@ avglength = sum(cellfun(@length, dict(:,2)) .* pixel_probabilities);
 
 h = entropy/avglength;
 
+%2
 
 myMap = containers.Map('KeyType', 'int32', 'ValueType', 'double');
 
@@ -105,11 +105,4 @@ p = counts{2} /100;
 ChannelSpan = 1-(-p*log2(p)-(1-p)*log2(1-p));
 
 
-%mutual information
-IA_GY =0
 
-for i = enco
-    for j = y
-        
-    end
-end
